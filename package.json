@@ -1,0 +1,67 @@
+{
+  "name": "title-bar-palette",
+  "displayName": "Title Bar Palette",
+  "description": "Automatically give each VS Code or Cursor workspace a distinct title bar color.",
+  "version": "0.1.0",
+  "publisher": "serbytedevelopment",
+  "license": "MIT",
+  "icon": "images/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Serbyte-Development/title-bar-palette.git"
+  },
+  "homepage": "https://github.com/Serbyte-Development/title-bar-palette#readme",
+  "bugs": {
+    "url": "https://github.com/Serbyte-Development/title-bar-palette/issues"
+  },
+  "galleryBanner": {
+    "color": "#315BD6",
+    "theme": "dark"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+    "keywords": [
+      "title bar",
+      "titlebar",
+      "color",
+      "workspace",
+      "window color",
+      "window colors",
+      "cursor",
+      "accessibility"
+    ],
+  "extensionKind": [
+    "ui"
+  ],
+  "main": "./extension.js",
+  "activationEvents": [
+    "onStartupFinished",
+    "onCommand:titleBarPalette.selectColor"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": true
+    },
+    "virtualWorkspaces": true
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "titleBarPalette.selectColor",
+        "title": "Select Color",
+        "category": "Title Bar Palette"
+      }
+    ]
+  },
+  "scripts": {
+    "test": "node --check extension.js && node test/validate-palette.js && node test/automatic-sequence.js",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@vscode/vsce": "3.9.2"
+  }
+}

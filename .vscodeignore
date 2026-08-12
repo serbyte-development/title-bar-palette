@@ -1,0 +1,10 @@
+.github/**
+.git/**
+.gitignore
+.vscode/**
+.secrets/**
+.env*
+test/**
+outputs/**
+*.vsix
+package-lock.json
