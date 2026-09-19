@@ -1,45 +1,42 @@
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Serbyte-Development/title-bar-palette/main/images/icon.png" width="128" alt="Title Bar Palette icon">
+</p>
+
 # Title Bar Palette
 
 [![CI](https://github.com/Serbyte-Development/title-bar-palette/actions/workflows/ci.yml/badge.svg)](https://github.com/Serbyte-Development/title-bar-palette/actions/workflows/ci.yml)
 [![Visual Studio Marketplace Version](https://img.shields.io/visual-studio-marketplace/v/serbytedevelopment.title-bar-palette)](https://marketplace.visualstudio.com/items?itemName=serbytedevelopment.title-bar-palette)
-[![Visual Studio Marketplace Installs](https://img.shields.io/visual-studio-marketplace/i/serbytedevelopment.title-bar-palette)](https://marketplace.visualstudio.com/items?itemName=serbytedevelopment.title-bar-palette)
 [![Open VSX Version](https://img.shields.io/open-vsx/v/serbytedevelopment/title-bar-palette)](https://open-vsx.org/extension/serbytedevelopment/title-bar-palette)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Automatically give each VS Code or Cursor workspace a distinct title-bar accent color. No setup, theme replacement, or extra panel required.
+Automatically give each VS Code or Cursor workspace a distinct title-bar accent so open windows are easier to identify at a glance.
 
-- **Identify windows quickly.** New workspaces rotate through 12 curated colors.
-- **Fits current VS Code.** The accent colors the Command Center and thin window/title borders, keeping the modern UI shell on the active theme.
-- **Works in Cursor.** The same compact accent keys are supported by Cursor.
-- **Assigns automatically.** The sequence persists after VS Code or Cursor is closed and reopened.
-- **Respects workspace settings.** A complete workspace-level accent remains unchanged.
-- **Choose manually.** `Title Bar Palette: Select Color` opens the 12-color picker.
+![VS Code workspaces with distinct Title Bar Palette accents](https://raw.githubusercontent.com/Serbyte-Development/title-bar-palette/main/images/window-title-color-examples.jpg)
 
-**Developed & maintained by [Serbyte Development](https://www.serbyte.net/)** · [GitHub](https://github.com/Serbyte-Development)
+## Features
 
-## How it works
+- **Automatic workspace colors.** New workspaces rotate through 12 curated presets.
+- **Compact accents.** The Command Center plus window and title-bar borders carry the workspace color while the surrounding editor shell stays on the active theme.
+- **Theme-aware presets.** Built-in colors switch between dark and light variants when the editor theme changes.
+- **Persistent sequence.** The next automatic color is remembered across editor restarts.
+- **Workspace-safe behavior.** Complete custom workspace accents and unrelated `workbench.colorCustomizations` values are preserved.
+- **Manual selection.** Run **Title Bar Palette: Select Color** to choose any preset for the current workspace.
 
-Title Bar Palette writes a small workspace accent through `workbench.colorCustomizations`:
+## Install
 
-- `commandCenter.background`
-- `commandCenter.foreground`
-- `commandCenter.inactiveForeground`
-- `commandCenter.activeBackground`
-- `commandCenter.activeForeground`
-- `commandCenter.border`
-- `commandCenter.activeBorder`
-- `commandCenter.inactiveBorder`
-- `window.activeBorder`
-- `window.inactiveBorder`
-- `titleBar.border`
+Install from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=serbytedevelopment.title-bar-palette) or [Open VSX](https://open-vsx.org/extension/serbytedevelopment/title-bar-palette).
 
-Fresh workspaces use the next palette color. The extension checks the workspace-scoped value directly, so user-level color customizations do not suppress automatic assignment.
+Title Bar Palette requires VS Code `^1.85.0`. Open a folder or workspace after installation and the extension assigns the next palette color automatically.
 
-Version 0.2 migrates recognized 0.1 title-bar presets to the compact accent and removes the four old workspace-level `titleBar.*Background` / `titleBar.*Foreground` values. Unrelated color customizations remain unchanged.
+## Using Title Bar Palette
 
-Empty untitled windows are left alone because Title Bar Palette writes only to workspace settings.
+Automatic assignment needs no configuration. Each fresh workspace receives the next preset in the sequence.
 
-## Colors
+To choose a color yourself, open the Command Palette and run **Title Bar Palette: Select Color**. Manual selection moves the automatic sequence to the following preset.
+
+Empty untitled windows are left unchanged because the extension writes only to workspace settings.
+
+## Palette
 
 | Color | Dark theme | Light theme |
 | --- | --- | --- |
@@ -56,25 +53,28 @@ Empty untitled windows are left alone because Title Bar Palette writes only to w
 | Lime | `#4D7C0F` | `#BEF264` |
 | Pink | `#BE185D` | `#F9A8D4` |
 
-Dark variants use white text. Light variants use `#111827`. Every Command Center text/background pair meets WCAG AA contrast.
+Dark variants use white Command Center text. Light variants use `#111827`. Every preset is validated for at least 4.5:1 Command Center text contrast.
 
-## Why the full title bar changed
+## How it works
 
-Current VS Code uses `titleBar.activeBackground` as the default for `modernUI.shellBackground`. A full title-bar tint can therefore color the larger shell around the workbench. Version 0.2 uses smaller title-bar surfaces that keep the window identity visible without tinting that shell.
+Title Bar Palette writes these workspace-scoped `workbench.colorCustomizations` values:
 
-If your User settings already contain `titleBar.activeBackground`, `titleBar.activeForeground`, `titleBar.inactiveBackground`, or `titleBar.inactiveForeground`, those user-level values still affect the editor. Remove them from User settings if you want the compact accent by itself.
+- Command Center background, foreground, active, inactive, and border colors
+- `window.activeBorder` and `window.inactiveBorder`
+- `titleBar.border`
 
-## Command
+The extension inspects the workspace-scoped value directly, so User-level color customizations do not suppress automatic assignment. A complete custom 11-key workspace accent is preserved. A recognized built-in preset re-anchors the sequence so the next automatic workspace receives the following color.
 
-Open the Command Palette and run **Title Bar Palette: Select Color** to choose any preset for the current workspace.
+Version 0.2 migrates recognized 0.1 title-bar presets to the compact accent format and removes the four legacy workspace-level title-bar background and foreground values. Other workspace color customizations stay in place.
 
-Manual selection also moves the automatic sequence to the following preset.
+> [!NOTE]
+> User-level `titleBar.activeBackground`, `titleBar.activeForeground`, `titleBar.inactiveBackground`, and `titleBar.inactiveForeground` values can still affect the editor. Remove those User settings if you want the compact accent by itself.
 
 ## Compatibility
 
-Title Bar Palette uses standard VS Code workspace configuration APIs and has no native dependencies. It is designed for desktop VS Code and Cursor.
+Title Bar Palette uses standard VS Code workspace configuration APIs, has no native dependencies, and is designed for desktop VS Code and Cursor. The extension metadata supports untrusted and virtual workspaces.
 
-`window.activeBorder` and `window.inactiveBorder` are visible on macOS and Linux when custom window chrome supports them. The Command Center and title-bar border provide the accent on other layouts.
+Window border visibility depends on editor chrome support. The extension always configures the Command Center and title-bar border accent values.
 
 ## Development
 
@@ -86,8 +86,6 @@ npm run package
 
 ## Support
 
-For bugs, compatibility issues, or focused feature requests, see [SUPPORT.md](SUPPORT.md).
+Report bugs, compatibility issues, and focused feature requests through [GitHub Issues](https://github.com/Serbyte-Development/title-bar-palette/issues) or see [SUPPORT.md](SUPPORT.md).
 
-## License
-
-MIT.
+Developed and maintained by [Serbyte Development](https://www.serbyte.net/).
