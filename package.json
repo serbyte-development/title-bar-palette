@@ -1,8 +1,8 @@
 {
   "name": "title-bar-palette",
   "displayName": "Title Bar Palette",
-  "description": "Automatically give each VS Code or Cursor workspace a distinct title bar color.",
-  "version": "0.1.0",
+  "description": "Automatically give each VS Code or Cursor workspace a distinct title-bar accent color.",
+  "version": "0.2.0",
   "publisher": "serbytedevelopment",
   "license": "MIT",
   "icon": "images/icon.png",
@@ -22,18 +22,23 @@
     "vscode": "^1.85.0"
   },
   "categories": [
+    "Themes",
     "Other"
   ],
-    "keywords": [
-      "title bar",
-      "titlebar",
-      "color",
-      "workspace",
-      "window color",
-      "window colors",
-      "cursor",
-      "accessibility"
-    ],
+  "keywords": [
+    "title bar",
+    "titlebar",
+    "color",
+    "workspace",
+    "window color",
+    "workspace color",
+    "workspace colors",
+    "workspace colorization",
+    "window colors",
+    "window colorization",
+    "cursor",
+    "accessibility"
+  ],
   "extensionKind": [
     "ui"
   ],

@@ -1,33 +1,51 @@
 'use strict';
 
 const assert = require('node:assert/strict');
-const fs = require('node:fs');
-const path = require('node:path');
-const { contrastRatio, presets, titleBarKeys } = require('../palette');
+const {
+  accentKeys,
+  colorsForPreset,
+  contrastRatio,
+  legacyPresetIndex,
+  presets,
+} = require('../palette');
 
-assert.equal(presets.length, 12, 'Expected exactly 12 base colors');
+assert.equal(presets.length, 12, 'Expected exactly 12 colors');
 assert.equal(new Set(presets.map(({ id }) => id)).size, presets.length, 'Preset IDs must be unique');
+assert.equal(new Set(presets.map(({ darkBackground }) => darkBackground)).size, presets.length, 'Dark colors must be unique');
+assert.equal(new Set(presets.map(({ lightBackground }) => lightBackground)).size, presets.length, 'Light colors must be unique');
+assert.ok(!accentKeys.includes('titleBar.activeBackground'), 'The modern accent must not color the full title-bar background');
 
 for (const preset of presets) {
-  assert.deepEqual(Object.keys(preset.colors), titleBarKeys);
-  assert.ok(
-    contrastRatio(
-      preset.colors['titleBar.activeBackground'],
-      preset.colors['titleBar.activeForeground'],
-    ) >= 4.5,
-    `${preset.name} active colors must meet WCAG AA`,
-  );
-  assert.ok(
-    contrastRatio(
-      preset.colors['titleBar.inactiveBackground'],
-      preset.colors['titleBar.inactiveForeground'],
-    ) >= 4.5,
-    `${preset.name} inactive colors must meet WCAG AA`,
-  );
-  assert.ok(
-    fs.existsSync(path.join(__dirname, '..', 'assets', 'swatches', `${preset.id}.png`)),
-    `${preset.name} must have a picker swatch`,
-  );
+  for (const variant of ['dark', 'light']) {
+    const colors = colorsForPreset(preset, variant);
+    assert.deepEqual(Object.keys(colors), accentKeys);
+    assert.ok(
+      contrastRatio(colors['commandCenter.background'], colors['commandCenter.foreground']) >= 4.5,
+      `${preset.name} ${variant} Command Center colors must meet WCAG AA`,
+    );
+  }
 }
 
-console.log('Validated 12 title bar colors; every text/background pair meets WCAG AA.');
+assert.equal(
+  legacyPresetIndex({
+    'titleBar.activeBackground': '#315BD6',
+    'titleBar.activeForeground': '#FFFFFF',
+    'titleBar.inactiveBackground': '#465CA4',
+    'titleBar.inactiveForeground': '#FFFFFF',
+  }),
+  6,
+  'Original 0.1.0 Cobalt must be recognized for migration',
+);
+
+assert.equal(
+  legacyPresetIndex({
+    'titleBar.activeBackground': '#075FC0',
+    'titleBar.activeForeground': '#FFFFFF',
+    'titleBar.inactiveBackground': '#075FC0',
+    'titleBar.inactiveForeground': '#FFFFFF',
+  }),
+  0,
+  'Recent 0.1.0 Blue must be recognized for migration',
+);
+
+console.log('Validated 12 modern accent colors, contrast, uniqueness, and legacy migration signatures.');

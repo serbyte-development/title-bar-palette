@@ -6,5 +6,8 @@
 .env*
 test/**
 outputs/**
+assets/swatches/**
+images/window-title-color-examples.jpg
+todo.md
 *.vsix
 package-lock.json

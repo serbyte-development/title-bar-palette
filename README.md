@@ -1,65 +1,72 @@
 # Title Bar Palette
 
 [![CI](https://github.com/Serbyte-Development/title-bar-palette/actions/workflows/ci.yml/badge.svg)](https://github.com/Serbyte-Development/title-bar-palette/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-
-<!--
 [![Visual Studio Marketplace Version](https://img.shields.io/visual-studio-marketplace/v/serbytedevelopment.title-bar-palette)](https://marketplace.visualstudio.com/items?itemName=serbytedevelopment.title-bar-palette)
 [![Visual Studio Marketplace Installs](https://img.shields.io/visual-studio-marketplace/i/serbytedevelopment.title-bar-palette)](https://marketplace.visualstudio.com/items?itemName=serbytedevelopment.title-bar-palette)
 [![Open VSX Version](https://img.shields.io/open-vsx/v/serbytedevelopment/title-bar-palette)](https://open-vsx.org/extension/serbytedevelopment/title-bar-palette)
--->
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Automatically give each VS Code or Cursor workspace a distinct title bar color. No setup, no theme changes, no extra UI.
+Automatically give each VS Code or Cursor workspace a distinct title-bar accent color. No setup, theme replacement, or extra panel required.
 
-![Two VS Code workspaces with distinct Title Bar Palette colors](images/workspaces.png)
-
-- **See which window you are in instantly.** New workspaces rotate through 12 curated colors.
-- **Set it and forget it.** The sequence persists after VS Code or Cursor is closed and reopened.
-- **Respect existing workspaces.** If all four title bar colors are already configured, automatic coloring does nothing.
-- **Preserve your theme.** Only four title bar values are changed; every unrelated color customization stays untouched.
-- **Choose manually when needed.** `Title Bar Palette: Select Color` opens the 12-color picker.
+- **Identify windows quickly.** New workspaces rotate through 12 curated colors.
+- **Fits current VS Code.** The accent colors the Command Center and thin window/title borders, keeping the modern UI shell on the active theme.
+- **Works in Cursor.** The same compact accent keys are supported by Cursor.
+- **Assigns automatically.** The sequence persists after VS Code or Cursor is closed and reopened.
+- **Respects workspace settings.** A complete workspace-level accent remains unchanged.
+- **Choose manually.** `Title Bar Palette: Select Color` opens the 12-color picker.
 
 **Developed & maintained by [Serbyte Development](https://www.serbyte.net/)** · [GitHub](https://github.com/Serbyte-Development)
 
 ## How it works
 
-When a workspace opens, Title Bar Palette checks these four `workbench.colorCustomizations` values:
+Title Bar Palette writes a small workspace accent through `workbench.colorCustomizations`:
 
-- `titleBar.activeBackground`
-- `titleBar.activeForeground`
-- `titleBar.inactiveBackground`
-- `titleBar.inactiveForeground`
+- `commandCenter.background`
+- `commandCenter.foreground`
+- `commandCenter.inactiveForeground`
+- `commandCenter.activeBackground`
+- `commandCenter.activeForeground`
+- `commandCenter.border`
+- `commandCenter.activeBorder`
+- `commandCenter.inactiveBorder`
+- `window.activeBorder`
+- `window.inactiveBorder`
+- `titleBar.border`
 
-If all four are already set, the workspace is left unchanged. If fewer than four are set, the extension applies the next complete preset and advances the global sequence.
+Fresh workspaces use the next palette color. The extension checks the workspace-scoped value directly, so user-level color customizations do not suppress automatic assignment.
 
-If the existing four values exactly match one of Title Bar Palette's presets, that preset re-anchors the sequence so the next newly colored workspace gets a different color. Complete custom title bar colors are left alone and do not advance the sequence.
+Version 0.2 migrates recognized 0.1 title-bar presets to the compact accent and removes the four old workspace-level `titleBar.*Background` / `titleBar.*Foreground` values. Unrelated color customizations remain unchanged.
 
 Empty untitled windows are left alone because Title Bar Palette writes only to workspace settings.
 
 ## Colors
 
-| Color | Active | Foreground | Inactive | Foreground |
-| --- | --- | --- | --- | --- |
-| Emerald | `#36B67A` | `#15202B` | `#3C9D72` | `#15202B` |
-| Plum | `#963D77` | `#FFFFFF` | `#81456D` | `#FFFFFF` |
-| Moss | `#6E9E35` | `#15202B` | `#73954B` | `#15202B` |
-| Rose | `#B83F5D` | `#FFFFFF` | `#984A5E` | `#FFFFFF` |
-| Ocean | `#187CB7` | `#FFFFFF` | `#266F99` | `#FFFFFF` |
-| Coral | `#C6503E` | `#FFFFFF` | `#A75A4B` | `#FFFFFF` |
-| Cobalt | `#315BD6` | `#FFFFFF` | `#465CA4` | `#FFFFFF` |
-| Rust | `#AD552D` | `#FFFFFF` | `#925D40` | `#FFFFFF` |
-| Indigo | `#5B4BC4` | `#FFFFFF` | `#5F549B` | `#FFFFFF` |
-| Amber | `#D49A00` | `#15202B` | `#B58B27` | `#15202B` |
-| Violet | `#7E47B8` | `#FFFFFF` | `#74518F` | `#FFFFFF` |
-| Gold | `#D9AA24` | `#15202B` | `#B89A43` | `#15202B` |
+| Color | Dark theme | Light theme |
+| --- | --- | --- |
+| Blue | `#2563EB` | `#93C5FD` |
+| Violet | `#7C3AED` | `#C4B5FD` |
+| Emerald | `#047857` | `#6EE7B7` |
+| Amber | `#A16207` | `#FCD34D` |
+| Rose | `#BE123C` | `#FDA4AF` |
+| Teal | `#0F766E` | `#5EEAD4` |
+| Cyan | `#0E7490` | `#67E8F9` |
+| Indigo | `#4338CA` | `#A5B4FC` |
+| Fuchsia | `#A21CAF` | `#F0ABFC` |
+| Orange | `#C2410C` | `#FDBA74` |
+| Lime | `#4D7C0F` | `#BEF264` |
+| Pink | `#BE185D` | `#F9A8D4` |
 
-Every active and inactive text/background pair meets WCAG AA contrast (4.5:1 or better). The inactive backgrounds are opaque because alpha colors blend with the underlying editor theme and make final contrast unpredictable.
+Dark variants use white text. Light variants use `#111827`. Every Command Center text/background pair meets WCAG AA contrast.
+
+## Why the full title bar changed
+
+Current VS Code uses `titleBar.activeBackground` as the default for `modernUI.shellBackground`. A full title-bar tint can therefore color the larger shell around the workbench. Version 0.2 uses smaller title-bar surfaces that keep the window identity visible without tinting that shell.
+
+If your User settings already contain `titleBar.activeBackground`, `titleBar.activeForeground`, `titleBar.inactiveBackground`, or `titleBar.inactiveForeground`, those user-level values still affect the editor. Remove them from User settings if you want the compact accent by itself.
 
 ## Command
 
-Open the Command Palette and run:
-
-- **Title Bar Palette: Select Color** — choose any of the 12 presets for the current workspace.
+Open the Command Palette and run **Title Bar Palette: Select Color** to choose any preset for the current workspace.
 
 Manual selection also moves the automatic sequence to the following preset.
 
@@ -67,7 +74,7 @@ Manual selection also moves the automatic sequence to the following preset.
 
 Title Bar Palette uses standard VS Code workspace configuration APIs and has no native dependencies. It is designed for desktop VS Code and Cursor.
 
-If title bar colors are not visible, set `"window.titleBarStyle": "custom"` and restart the editor.
+`window.activeBorder` and `window.inactiveBorder` are visible on macOS and Linux when custom window chrome supports them. The Command Center and title-bar border provide the accent on other layouts.
 
 ## Development
 
