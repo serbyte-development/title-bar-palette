@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="https://raw.githubusercontent.com/Serbyte-Development/title-bar-palette/main/images/icon.png" width="128" alt="Title Bar Palette icon">
-</p>
-
 # Title Bar Palette
 
 [![CI](https://github.com/Serbyte-Development/title-bar-palette/actions/workflows/ci.yml/badge.svg)](https://github.com/Serbyte-Development/title-bar-palette/actions/workflows/ci.yml)
