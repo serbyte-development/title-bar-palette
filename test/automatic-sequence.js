@@ -4,6 +4,7 @@ const assert = require('node:assert/strict');
 const Module = require('node:module');
 const {
   accentKeys,
+  compactAccentKeys,
   colorsForPreset,
   legacyTitleBarKeys,
   presets,
@@ -25,6 +26,9 @@ const vscode = {
   ConfigurationTarget: {
     Global: 1,
     Workspace: 2,
+  },
+  Uri: {
+    joinPath: (...parts) => parts.join('/'),
   },
   commands: {
     registerCommand: (name, handler) => {
@@ -67,6 +71,7 @@ Module._load = originalLoad;
 
 function context() {
   return {
+    extensionUri: '/extension',
     subscriptions: [],
     globalState: {
       get: (key) => persistedState.get(key),
@@ -145,6 +150,21 @@ function expectedPreset(preset, variant = 'dark') {
 
   persistedState.clear();
   workspaceColors = {
+    ...Object.fromEntries(
+      compactAccentKeys.map((key) => [key, expectedPreset(presets[4])[key]]),
+    ),
+    'editor.background': '#123456',
+  };
+  await activate(context());
+  assert.deepEqual(
+    Object.fromEntries(accentKeys.map((key) => [key, workspaceColors[key]])),
+    expectedPreset(presets[4]),
+    'Previous 0.2 compact presets must migrate in place to the full title-bar/shell format',
+  );
+  assert.equal(workspaceColors['editor.background'], '#123456', 'Compact migration must preserve unrelated customizations');
+
+  persistedState.clear();
+  workspaceColors = {
     'titleBar.activeBackground': '#315BD6',
     'titleBar.activeForeground': '#FFFFFF',
     'titleBar.inactiveBackground': '#465CA4',
@@ -157,11 +177,18 @@ function expectedPreset(preset, variant = 'dark') {
     expectedPreset(presets[6]),
     'Known 0.1.0 colors must migrate to the equivalent sequence slot',
   );
-  assert.ok(
-    legacyTitleBarKeys.every((key) => !(key in workspaceColors)),
-    'Known legacy title-bar keys must be removed during migration',
-  );
+  assert.ok(legacyTitleBarKeys.every((key) => key in workspaceColors), 'Migrated presets must keep title-bar coloring');
   assert.equal(workspaceColors['editor.background'], '#123456', 'Migration must preserve unrelated customizations');
+
+  const customLegacyColors = {
+    'titleBar.activeBackground': '#123456',
+    'titleBar.activeForeground': '#FFFFFF',
+    'titleBar.inactiveBackground': '#234567',
+    'titleBar.inactiveForeground': '#FFFFFF',
+  };
+  workspaceColors = { ...customLegacyColors };
+  await activate(context());
+  assert.deepEqual(workspaceColors, customLegacyColors, 'Complete custom title-bar colors must remain unchanged');
 
   persistedState.clear();
   workspaceColors = expectedPreset(presets[0]);

@@ -2,9 +2,9 @@
 
 ## 0.2.0
 
-- Replaces full title-bar backgrounds with a compact Command Center and border accent for current VS Code UI.
+- Restores strong title-bar colors while explicitly tinting the modern VS Code shell with theme-aware muted colors.
 - Fixes automatic assignment when User settings already contain title-bar colors.
-- Migrates recognized 0.1.0 workspace title-bar presets to the new accent format.
+- Migrates recognized 0.1.0 title-bar presets and earlier 0.2 compact presets in place.
 - Adds a new 12-color palette with dark and light variants.
 - Replaces the broken GitHub Actions badge with live Marketplace and Open VSX badges.
 

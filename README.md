@@ -12,8 +12,9 @@ Automatically give each VS Code or Cursor workspace a distinct title-bar accent 
 ## Features
 
 - **Automatic workspace colors.** New workspaces rotate through 12 curated presets.
-- **Compact accents.** The Command Center plus window and title-bar borders carry the workspace color while the surrounding editor shell stays on the active theme.
-- **Theme-aware presets.** Built-in colors switch between dark and light variants when the editor theme changes.
+- **Strong title-bar colors.** The title bar and Command Center carry the workspace color in both VS Code and Cursor.
+- **Theme-aware shell tint.** Current VS Code gets a muted `modernUI` shell tint derived from the workspace color, with separate dark and light variants.
+- **Theme-aware presets.** Built-in colors switch automatically when the editor theme changes.
 - **Persistent sequence.** The next automatic color is remembered across editor restarts.
 - **Workspace-safe behavior.** Complete custom workspace accents and unrelated `workbench.colorCustomizations` values are preserved.
 - **Manual selection.** Run **Title Bar Palette: Select Color** to choose any preset for the current workspace.
@@ -53,24 +54,25 @@ Dark variants use white Command Center text. Light variants use `#111827`. Every
 
 ## How it works
 
-Title Bar Palette writes these workspace-scoped `workbench.colorCustomizations` values:
+Title Bar Palette writes workspace-scoped `workbench.colorCustomizations` values for:
 
 - Command Center background, foreground, active, inactive, and border colors
+- Title-bar active/inactive backgrounds and foregrounds
+- `modernUI.shellBackground` and `modernUI.inactiveShellBackground`
 - `window.activeBorder` and `window.inactiveBorder`
 - `titleBar.border`
 
-The extension inspects the workspace-scoped value directly, so User-level color customizations do not suppress automatic assignment. A complete custom 11-key workspace accent is preserved. A recognized built-in preset re-anchors the sequence so the next automatic workspace receives the following color.
+The title bar uses the full preset color. On current VS Code, the explicit `modernUI` values prevent that strong title-bar color from bleeding across the entire shell; the shell gets a darker or lighter muted tint instead. Cursor versions without those `modernUI` theme keys simply use the title-bar colors and ignore the extra shell values.
 
-Version 0.2 migrates recognized 0.1 title-bar presets to the compact accent format and removes the four legacy workspace-level title-bar background and foreground values. Other workspace color customizations stay in place.
+The extension inspects the workspace-scoped value directly, so User-level color customizations do not suppress automatic assignment. Complete custom workspace accents and complete custom title-bar colors are preserved. Recognized built-in presets re-anchor the sequence so the next automatic workspace receives the following color.
 
-> [!NOTE]
-> User-level `titleBar.activeBackground`, `titleBar.activeForeground`, `titleBar.inactiveBackground`, and `titleBar.inactiveForeground` values can still affect the editor. Remove those User settings if you want the compact accent by itself.
+Recognized 0.1 title-bar presets and earlier 0.2 compact presets migrate in place to the current title-bar plus shell format. Other workspace color customizations stay in place.
 
 ## Compatibility
 
 Title Bar Palette uses standard VS Code workspace configuration APIs, has no native dependencies, and is designed for desktop VS Code and Cursor. The extension metadata supports untrusted and virtual workspaces.
 
-Window border visibility depends on editor chrome support. The extension always configures the Command Center and title-bar border accent values.
+Window border visibility depends on editor chrome support. The title bar and Command Center remain the primary workspace identifiers.
 
 ## Development
 

@@ -1,6 +1,6 @@
 'use strict';
 
-const accentKeys = [
+const compactAccentKeys = [
   'commandCenter.background',
   'commandCenter.foreground',
   'commandCenter.inactiveForeground',
@@ -19,6 +19,17 @@ const legacyTitleBarKeys = [
   'titleBar.activeForeground',
   'titleBar.inactiveBackground',
   'titleBar.inactiveForeground',
+];
+
+const modernUiKeys = [
+  'modernUI.shellBackground',
+  'modernUI.inactiveShellBackground',
+];
+
+const accentKeys = [
+  ...compactAccentKeys,
+  ...legacyTitleBarKeys,
+  ...modernUiKeys,
 ];
 
 const presetDefinitions = [
@@ -93,7 +104,14 @@ const presets = presetDefinitions.map(([id, name, darkBackground, lightBackgroun
   lightBackground,
 }));
 
-function colorsForPreset(preset, themeVariant) {
+function blendHex(baseHex, tintHex, amount) {
+  const base = baseHex.slice(1).match(/../g).map((value) => parseInt(value, 16));
+  const tint = tintHex.slice(1).match(/../g).map((value) => parseInt(value, 16));
+  const channels = base.map((value, index) => Math.round(value + ((tint[index] - value) * amount)));
+  return `#${channels.map((value) => value.toString(16).padStart(2, '0')).join('').toUpperCase()}`;
+}
+
+function compactColorsForPreset(preset, themeVariant) {
   const background = themeVariant === 'dark'
     ? preset.darkBackground
     : preset.lightBackground;
@@ -111,6 +129,25 @@ function colorsForPreset(preset, themeVariant) {
     'window.activeBorder': background,
     'window.inactiveBorder': background,
     'titleBar.border': background,
+  };
+}
+
+function colorsForPreset(preset, themeVariant) {
+  const compactColors = compactColorsForPreset(preset, themeVariant);
+  const background = compactColors['commandCenter.background'];
+  const foreground = compactColors['commandCenter.foreground'];
+  const shellBase = themeVariant === 'dark' ? '#0B0B0D' : '#FFFFFF';
+  const shellTint = themeVariant === 'dark' ? 0.18 : 0.14;
+  const inactiveShellTint = themeVariant === 'dark' ? 0.12 : 0.09;
+
+  return {
+    ...compactColors,
+    'titleBar.activeBackground': background,
+    'titleBar.activeForeground': foreground,
+    'titleBar.inactiveBackground': background,
+    'titleBar.inactiveForeground': foreground,
+    'modernUI.shellBackground': blendHex(shellBase, background, shellTint),
+    'modernUI.inactiveShellBackground': blendHex(shellBase, background, inactiveShellTint),
   };
 }
 
@@ -137,8 +174,17 @@ function legacyPresetIndex(colors) {
     legacyTitleBarKeys.every((key) => colors[key] === variant[key])));
 }
 
+function compactPresetIndex(colors) {
+  return presets.findIndex((preset) => ['dark', 'light'].some((variant) => {
+    const expected = compactColorsForPreset(preset, variant);
+    return compactAccentKeys.every((key) => colors[key] === expected[key]);
+  }));
+}
+
 module.exports = {
   accentKeys,
+  compactAccentKeys,
+  compactPresetIndex,
   colorsForPreset,
   contrastRatio,
   legacyPresetIndex,

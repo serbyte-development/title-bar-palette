@@ -3,6 +3,8 @@
 const vscode = require('vscode');
 const {
   accentKeys,
+  compactAccentKeys,
+  compactPresetIndex,
   colorsForPreset,
   legacyPresetIndex,
   legacyTitleBarKeys,
@@ -114,10 +116,25 @@ async function initializeAccent(context) {
     return;
   }
 
+  const compactIndex = compactPresetIndex(colors);
+  if (compactIndex >= 0) {
+    await writePreset(presets[compactIndex]);
+    await setNextPresetIndex(context, nextPresetIndex(compactIndex));
+    return;
+  }
+
+  if (compactAccentKeys.every((key) => key in colors)) {
+    return;
+  }
+
   const legacyIndex = legacyPresetIndex(colors);
   if (legacyIndex >= 0) {
     await writePreset(presets[legacyIndex], true);
     await setNextPresetIndex(context, nextPresetIndex(legacyIndex));
+    return;
+  }
+
+  if (legacyTitleBarKeys.every((key) => key in colors)) {
     return;
   }
 
@@ -134,9 +151,16 @@ async function selectColor(context) {
 
   const colors = workspaceColors();
   const currentIndex = matchingPresetIndex(colors);
+  const variant = themeVariant();
   const items = presets.map((preset, index) => ({
     label: preset.name,
-    description: `${index === currentIndex ? 'Current  •  ' : ''}${colorsForPreset(preset, themeVariant())['commandCenter.background']}`,
+    description: `${index === currentIndex ? 'Current  •  ' : ''}${colorsForPreset(preset, variant)['commandCenter.background']}`,
+    iconPath: vscode.Uri.joinPath(
+      context.extensionUri,
+      'images',
+      'swatches',
+      `${preset.id}-${variant}.png`,
+    ),
     preset,
     index,
   }));
