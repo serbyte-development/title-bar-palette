@@ -1,0 +1,25 @@
+version: 1
+repository: Serbyte-Development/title-bar-palette
+branch: main
+targets:
+  - github
+  - vscode_marketplace
+  - open_vsx
+artifacts:
+  workflow: package.yml
+  event: push
+  names:
+    - title-bar-palette
+github:
+  tagPrefix: v
+  assets: []
+  artifactPatterns:
+    - "*.vsix"
+vscode_marketplace:
+  packageDir: .
+  artifactPatterns:
+    - "*.vsix"
+open_vsx:
+  packageDir: .
+  artifactPatterns:
+    - "*.vsix"
