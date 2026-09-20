@@ -32,7 +32,12 @@ for (const preset of presets) {
       contrastRatio(colors['titleBar.activeBackground'], colors['titleBar.activeForeground']) >= 4.5,
       `${preset.name} ${variant} title-bar colors must meet WCAG AA`,
     );
+    assert.ok(
+      contrastRatio(colors['titleBar.inactiveBackground'], colors['titleBar.inactiveForeground']) >= 4.5,
+      `${preset.name} ${variant} inactive title-bar colors must meet WCAG AA`,
+    );
     assert.equal(colors['titleBar.activeBackground'], colors['commandCenter.background']);
+    assert.notEqual(colors['titleBar.inactiveBackground'], colors['titleBar.activeBackground']);
     assert.notEqual(colors['modernUI.shellBackground'], colors['titleBar.activeBackground']);
     assert.ok(
       fs.existsSync(path.join(__dirname, '..', 'images', 'swatches', `${preset.id}-${variant}.png`)),

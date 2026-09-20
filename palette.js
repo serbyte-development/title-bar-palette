@@ -138,13 +138,14 @@ function colorsForPreset(preset, themeVariant) {
   const foreground = compactColors['commandCenter.foreground'];
   const shellBase = themeVariant === 'dark' ? '#0B0B0D' : '#FFFFFF';
   const shellTint = themeVariant === 'dark' ? 0.18 : 0.14;
-  const inactiveShellTint = themeVariant === 'dark' ? 0.12 : 0.09;
+  const inactiveShellTint = themeVariant === 'dark' ? 0.08 : 0.06;
+  const inactiveTitleBarBackground = blendHex(background, shellBase, 0.38);
 
   return {
     ...compactColors,
     'titleBar.activeBackground': background,
     'titleBar.activeForeground': foreground,
-    'titleBar.inactiveBackground': background,
+    'titleBar.inactiveBackground': inactiveTitleBarBackground,
     'titleBar.inactiveForeground': foreground,
     'modernUI.shellBackground': blendHex(shellBase, background, shellTint),
     'modernUI.inactiveShellBackground': blendHex(shellBase, background, inactiveShellTint),
